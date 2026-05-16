@@ -70,13 +70,87 @@
 
   </div>
 
+  <!-- ── Create Game Modal ── -->
+  <div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+    <div class="modal" id="modal">
+
+      <div class="modal-header">
+        <div class="modal-title-row">
+          <span class="modal-star">★</span>
+          <h2 class="modal-title">CREATE A GAME</h2>
+          <span class="modal-star">★</span>
+        </div>
+        <p class="modal-sub">Enter your name to get started</p>
+      </div>
+
+      <div class="modal-body">
+        <label class="input-label" for="playerName">PLAYER NAME</label>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            id="playerName"
+            class="input-field"
+            placeholder="e.g. Steve Harvey"
+            maxlength="20"
+            autocomplete="off"
+          />
+          <div class="input-underline"></div>
+        </div>
+        <p class="input-hint">Max 20 characters</p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="modal-btn" id="createBtn" onclick="submitCreate()">
+          <span class="modal-btn-icon">＋</span>
+          <span>CREATE GAME</span>
+        </button>
+        <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+
   <script>
+    // ── Modal controls ──
     function handleCreate() {
-      alert("Create Game — backend coming soon!");
+      document.getElementById('modalOverlay').classList.add('active');
+      setTimeout(() => document.getElementById('playerName').focus(), 300);
     }
+
+    function closeModal() {
+      const overlay = document.getElementById('modalOverlay');
+      overlay.classList.remove('active');
+      document.getElementById('playerName').value = '';
+    }
+
+    function handleOverlayClick(e) {
+      if (e.target === document.getElementById('modalOverlay')) closeModal();
+    }
+
+    function submitCreate() {
+      const name = document.getElementById('playerName').value.trim();
+      if (!name) {
+        document.getElementById('playerName').classList.add('input-error');
+        document.getElementById('playerName').placeholder = 'Please enter a name!';
+        setTimeout(() => {
+          document.getElementById('playerName').classList.remove('input-error');
+          document.getElementById('playerName').placeholder = 'e.g. Steve Harvey';
+        }, 1800);
+        return;
+      }
+      // Store player name locally — backend call will go here
+      localStorage.setItem('playerName', name);
+      alert(`Welcome, ${name}! Backend coming soon.`);
+    }
+
     function handleJoin() {
       alert("Join Game — backend coming soon!");
     }
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
 
     // Staggered letter animation on load
     document.querySelectorAll('.feud-letter').forEach((el, i) => {

@@ -345,9 +345,224 @@ body {
   to   { transform: translateX(-100%); }
 }
 
+/* ── Modal overlay ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 8, 20, 0.85);
+  backdrop-filter: blur(6px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-overlay.active .modal {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* ── Modal box ── */
+.modal {
+  background: var(--navy-mid);
+  border: 2px solid rgba(245, 197, 24, 0.35);
+  border-radius: 6px;
+  width: 100%;
+  max-width: 420px;
+  padding: 36px 36px 28px;
+  box-shadow:
+    0 0 0 1px rgba(245,197,24,0.08),
+    0 0 60px rgba(30, 109, 255, 0.2),
+    0 30px 80px rgba(0,0,0,0.6);
+  transform: translateY(24px) scale(0.97);
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+/* ── Modal header ── */
+.modal-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.modal-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.modal-star {
+  color: var(--gold);
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+.modal-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  text-shadow: 0 0 16px rgba(245, 197, 24, 0.4);
+}
+
+.modal-sub {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: rgba(232, 236, 255, 0.45);
+  letter-spacing: 0.03em;
+}
+
+/* ── Input ── */
+.modal-body {
+  margin-bottom: 28px;
+}
+
+.input-label {
+  display: block;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  color: rgba(232, 236, 255, 0.45);
+  margin-bottom: 10px;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-field {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(245, 197, 24, 0.2);
+  border-radius: 4px;
+  padding: 14px 16px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--white);
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-field::placeholder {
+  color: rgba(232, 236, 255, 0.2);
+  font-weight: 300;
+}
+
+.input-field:focus {
+  border-color: rgba(245, 197, 24, 0.6);
+  background: rgba(255,255,255,0.07);
+  box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.1);
+}
+
+.input-field.input-error {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(224, 48, 48, 0.15);
+  animation: shake 0.35s ease;
+}
+
+.input-hint {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.72rem;
+  color: rgba(232, 236, 255, 0.25);
+  margin-top: 7px;
+  text-align: right;
+}
+
+/* ── Modal footer ── */
+.modal-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.modal-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #1a4fd6 0%, #1e6dff 60%, #3a82ff 100%);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.1em;
+  color: var(--white);
+  box-shadow: 0 4px 20px rgba(30, 109, 255, 0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.modal-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(30, 109, 255, 0.6), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+
+.modal-btn:active {
+  transform: scale(0.98);
+}
+
+.modal-btn-icon {
+  font-size: 1.1rem;
+}
+
+.modal-cancel {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: rgba(232, 236, 255, 0.3);
+  letter-spacing: 0.05em;
+  transition: color 0.15s ease;
+  padding: 4px 8px;
+}
+
+.modal-cancel:hover {
+  color: rgba(232, 236, 255, 0.6);
+}
+
+/* ── Shake animation for error ── */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-6px); }
+  40%       { transform: translateX(6px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px); }
+}
+
 /* ── Responsive ── */
 @media (max-width: 480px) {
   .feud-letter { font-size: 5.5rem; }
   .logo-top    { font-size: 1.5rem; }
   .board-panel { padding: 24px 20px; }
+  .modal       { padding: 28px 20px 22px; }
 }
