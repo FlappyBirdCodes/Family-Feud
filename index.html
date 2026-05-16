@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Family Feud</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+  <div class="scanlines"></div>
+
+  <div class="container">
+
+    <div class="logo-wrapper">
+      <div class="logo-top">FAMILY</div>
+      <div class="logo-feud">
+        <span class="feud-letter">F</span>
+        <span class="feud-letter">E</span>
+        <span class="feud-letter">U</span>
+        <span class="feud-letter">D</span>
+      </div>
+      <div class="logo-stars">
+        <span>★</span><span>★</span><span>★</span>
+      </div>
+      <div class="logo-tagline">SURVEY SAYS...</div>
+    </div>
+
+    <div class="board-panel">
+      <div class="panel-header">
+        <div class="panel-dot"></div>
+        <span>SELECT YOUR OPTION</span>
+        <div class="panel-dot"></div>
+      </div>
+
+      <div class="buttons">
+        <button class="btn btn-create" onclick="handleCreate()">
+          <span class="btn-icon">＋</span>
+          <span class="btn-text">Create New Game</span>
+          <span class="btn-sub">Start a room &amp; invite a friend</span>
+        </button>
+
+        <div class="divider">
+          <div class="divider-line"></div>
+          <span>OR</span>
+          <div class="divider-line"></div>
+        </div>
+
+        <button class="btn btn-join" onclick="handleJoin()">
+          <span class="btn-icon">→</span>
+          <span class="btn-text">Join Game</span>
+          <span class="btn-sub">Enter a room code to play</span>
+        </button>
+      </div>
+
+      <div class="panel-footer">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+    </div>
+
+    <div class="ticker">
+      <div class="ticker-inner">
+        100 POINTS &nbsp;★&nbsp; SURVEY SAYS &nbsp;★&nbsp; TOP ANSWER &nbsp;★&nbsp; GOOD ANSWER &nbsp;★&nbsp; STRIKE! &nbsp;★&nbsp; NUMBER ONE ANSWER &nbsp;★&nbsp; 100 POINTS &nbsp;★&nbsp; SURVEY SAYS &nbsp;★&nbsp; TOP ANSWER &nbsp;★&nbsp; GOOD ANSWER &nbsp;★&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function handleCreate() {
+      alert("Create Game — backend coming soon!");
+    }
+    function handleJoin() {
+      alert("Join Game — backend coming soon!");
+    }
+
+    // Staggered letter animation on load
+    document.querySelectorAll('.feud-letter').forEach((el, i) => {
+      el.style.animationDelay = `${i * 0.12}s`;
+    });
+  </script>
+</body>
+</html>

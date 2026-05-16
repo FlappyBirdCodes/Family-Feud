@@ -1,0 +1,353 @@
+/* ───────────────────────────────────────────
+   FAMILY FEUD – HOME PAGE STYLES
+   Theme: Classic game show — deep navy, gold,
+   electric blue, bold display type
+─────────────────────────────────────────── */
+
+:root {
+  --navy:       #0a0e2a;
+  --navy-mid:   #101535;
+  --navy-light: #1a2150;
+  --gold:       #f5c518;
+  --gold-dark:  #c49a00;
+  --gold-light: #ffe566;
+  --blue:       #1e6dff;
+  --blue-light: #5b9bff;
+  --white:      #ffffff;
+  --off-white:  #e8ecff;
+  --red:        #e03030;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--navy);
+  font-family: 'Oswald', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── Background grid ── */
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(30, 109, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 109, 255, 0.07) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Scanlines overlay ── */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Main container ── */
+.container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+  width: 100%;
+  max-width: 560px;
+  padding: 24px 16px 80px;
+}
+
+/* ── LOGO ── */
+.logo-wrapper {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.logo-top {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 0.45em;
+  color: var(--off-white);
+  opacity: 0.75;
+  animation: fadeDown 0.6s ease both;
+}
+
+.logo-feud {
+  display: flex;
+  gap: 6px;
+}
+
+.feud-letter {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 7.5rem;
+  line-height: 1;
+  color: var(--gold);
+  text-shadow:
+    0 0 20px rgba(245, 197, 24, 0.5),
+    0 4px 0 var(--gold-dark),
+    0 6px 12px rgba(0,0,0,0.6);
+  display: inline-block;
+  animation: dropIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.logo-stars {
+  font-size: 1.1rem;
+  color: var(--gold);
+  letter-spacing: 0.6em;
+  opacity: 0.8;
+  animation: fadeUp 0.7s ease 0.5s both;
+}
+
+.logo-tagline {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.5em;
+  color: var(--blue-light);
+  animation: fadeUp 0.7s ease 0.65s both;
+  text-shadow: 0 0 12px rgba(91, 155, 255, 0.6);
+}
+
+/* ── Board panel ── */
+.board-panel {
+  width: 100%;
+  background: var(--navy-mid);
+  border: 2px solid rgba(245, 197, 24, 0.3);
+  border-radius: 6px;
+  padding: 32px 36px;
+  box-shadow:
+    0 0 0 1px rgba(245,197,24,0.08),
+    0 0 40px rgba(30, 109, 255, 0.15),
+    0 20px 60px rgba(0,0,0,0.5);
+  animation: fadeUp 0.7s ease 0.8s both;
+  position: relative;
+  overflow: hidden;
+}
+
+.board-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  color: rgba(232, 236, 255, 0.4);
+  margin-bottom: 28px;
+}
+
+.panel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0.5;
+}
+
+/* ── Buttons ── */
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+  padding: 20px 24px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0);
+  transition: background 0.15s ease;
+}
+
+.btn:hover::after {
+  background: rgba(255,255,255,0.04);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-create {
+  background: linear-gradient(135deg, #1a4fd6 0%, #1e6dff 60%, #3a82ff 100%);
+  box-shadow: 0 4px 20px rgba(30, 109, 255, 0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+
+.btn-create:hover {
+  box-shadow: 0 6px 28px rgba(30, 109, 255, 0.6), inset 0 1px 0 rgba(255,255,255,0.15);
+  transform: translateY(-2px);
+}
+
+.btn-join {
+  background: linear-gradient(135deg, #b8920a 0%, #d4a800 50%, #f5c518 100%);
+  box-shadow: 0 4px 20px rgba(245, 197, 24, 0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.btn-join:hover {
+  box-shadow: 0 6px 28px rgba(245, 197, 24, 0.55), inset 0 1px 0 rgba(255,255,255,0.2);
+  transform: translateY(-2px);
+}
+
+.btn-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 2px;
+}
+
+.btn-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.7rem;
+  letter-spacing: 0.08em;
+  color: var(--white);
+  line-height: 1;
+}
+
+.btn-join .btn-text {
+  color: var(--navy);
+}
+
+.btn-sub {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.02em;
+}
+
+.btn-join .btn-sub {
+  color: rgba(10, 14, 42, 0.65);
+}
+
+/* ── Divider ── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 0;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: rgba(232, 236, 255, 0.3);
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(232, 236, 255, 0.1);
+}
+
+/* ── Panel footer dots ── */
+.panel-footer {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(232, 236, 255, 0.2);
+}
+
+.dot.active {
+  background: var(--gold);
+  box-shadow: 0 0 8px rgba(245, 197, 24, 0.6);
+}
+
+/* ── Ticker ── */
+.ticker {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--gold);
+  padding: 10px 0;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.ticker-inner {
+  display: inline-block;
+  white-space: nowrap;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.15em;
+  color: var(--navy);
+  animation: ticker 22s linear infinite;
+}
+
+/* ── Keyframes ── */
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-30px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 0.75; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ticker {
+  from { transform: translateX(100vw); }
+  to   { transform: translateX(-100%); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .feud-letter { font-size: 5.5rem; }
+  .logo-top    { font-size: 1.5rem; }
+  .board-panel { padding: 24px 20px; }
+}
