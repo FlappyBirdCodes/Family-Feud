@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Family Feud</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+  <div class="scanlines"></div>
+
+  <div class="container">
+
+    <div class="logo-wrapper">
+      <div class="logo-top">FAMILY</div>
+      <div class="logo-feud">
+        <span class="feud-letter">F</span>
+        <span class="feud-letter">E</span>
+        <span class="feud-letter">U</span>
+        <span class="feud-letter">D</span>
+      </div>
+      <div class="logo-stars">
+        <span>★</span><span>★</span><span>★</span>
+      </div>
+      <div class="logo-tagline">SURVEY SAYS...</div>
+    </div>
+
+    <div class="board-panel">
+      <div class="panel-header">
+        <div class="panel-dot"></div>
+        <span>SELECT YOUR OPTION</span>
+        <div class="panel-dot"></div>
+      </div>
+
+      <div class="buttons">
+        <button class="btn btn-create" onclick="handleCreate()">
+          <span class="btn-icon">＋</span>
+          <span class="btn-text">Create New Game</span>
+          <span class="btn-sub">Start a room &amp; invite a friend</span>
+        </button>
+
+        <div class="divider">
+          <div class="divider-line"></div>
+          <span>OR</span>
+          <div class="divider-line"></div>
+        </div>
+
+        <button class="btn btn-join" onclick="handleJoin()">
+          <span class="btn-icon">→</span>
+          <span class="btn-text">Join Game</span>
+          <span class="btn-sub">Enter a room code to play</span>
+        </button>
+      </div>
+
+      <div class="panel-footer">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+    </div>
+
+    <div class="ticker">
+      <div class="ticker-inner">
+        100 POINTS &nbsp;★&nbsp; SURVEY SAYS &nbsp;★&nbsp; TOP ANSWER &nbsp;★&nbsp; GOOD ANSWER &nbsp;★&nbsp; STRIKE! &nbsp;★&nbsp; NUMBER ONE ANSWER &nbsp;★&nbsp; 100 POINTS &nbsp;★&nbsp; SURVEY SAYS &nbsp;★&nbsp; TOP ANSWER &nbsp;★&nbsp; GOOD ANSWER &nbsp;★&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Create Game Modal ── -->
+  <div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+    <div class="modal" id="modal">
+
+      <div class="modal-header">
+        <div class="modal-title-row">
+          <span class="modal-star">★</span>
+          <h2 class="modal-title">CREATE A GAME</h2>
+          <span class="modal-star">★</span>
+        </div>
+        <p class="modal-sub">Enter your name to get started</p>
+      </div>
+
+      <div class="modal-body">
+        <label class="input-label" for="playerName">PLAYER NAME</label>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            id="playerName"
+            class="input-field"
+            placeholder="e.g. Steve Harvey"
+            maxlength="20"
+            autocomplete="off"
+          />
+          <div class="input-underline"></div>
+        </div>
+        <p class="input-hint">Max 20 characters</p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="modal-btn" id="createBtn" onclick="submitCreate()">
+          <span class="modal-btn-icon">＋</span>
+          <span>CREATE GAME</span>
+        </button>
+        <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ── Modal controls ──
+    function handleCreate() {
+      document.getElementById('modalOverlay').classList.add('active');
+      setTimeout(() => document.getElementById('playerName').focus(), 300);
+    }
+
+    function closeModal() {
+      const overlay = document.getElementById('modalOverlay');
+      overlay.classList.remove('active');
+      document.getElementById('playerName').value = '';
+    }
+
+    function handleOverlayClick(e) {
+      if (e.target === document.getElementById('modalOverlay')) closeModal();
+    }
+
+    async function submitCreate() {
+      const nameInput = document.getElementById('playerName');
+      const name = nameInput.value.trim();
+
+      if (!name) {
+        nameInput.classList.add('input-error');
+        nameInput.placeholder = 'Please enter a name!';
+        setTimeout(() => {
+          nameInput.classList.remove('input-error');
+          nameInput.placeholder = 'e.g. Steve Harvey';
+        }, 1800);
+        return;
+      }
+
+      // Disable button while request is in flight
+      const btn = document.getElementById('createBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="modal-btn-icon">⏳</span><span>CONNECTING...</span>';
+
+      try {
+        const response = await fetch('http://localhost:3000/api/create-game', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ playerName: name })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Store player name for use on the waiting page
+          localStorage.setItem('playerName', name);
+          console.log('✅ Server response:', data.message);
+          alert(`✅ Connected to MongoDB! Welcome, ${name}!`);
+        } else {
+          throw new Error(data.error || 'Something went wrong.');
+        }
+
+      } catch (err) {
+        console.error('❌ Error:', err.message);
+        alert(`❌ Could not connect to the server. Make sure it is running.\n\n${err.message}`);
+      } finally {
+        // Re-enable button
+        btn.disabled = false;
+        btn.innerHTML = '<span class="modal-btn-icon">＋</span><span>CREATE GAME</span>';
+      }
+    }
+
+    function handleJoin() {
+      alert("Join Game — backend coming soon!");
+    }
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Staggered letter animation on load
+    document.querySelectorAll('.feud-letter').forEach((el, i) => {
+      el.style.animationDelay = `${i * 0.12}s`;
+    });
+  </script>
+</body>
+</html>
