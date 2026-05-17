@@ -156,10 +156,15 @@
         const data = await response.json();
 
         if (response.ok) {
-          // Store player name for use on the waiting page
+          // Store player info locally for use on the waiting page
           localStorage.setItem('playerName', name);
-          console.log('✅ Server response:', data.message);
-          alert(`✅ Connected to MongoDB! Welcome, ${name}!`);
+          localStorage.setItem('playerId', data.playerId);
+          localStorage.setItem('roomCode', data.roomCode);
+
+          console.log(`✅ Game created! Room code: ${data.roomCode}`);
+
+          // Redirect to the waiting page
+          window.location.href = `/waiting.html?code=${data.roomCode}`;
         } else {
           throw new Error(data.error || 'Something went wrong.');
         }
