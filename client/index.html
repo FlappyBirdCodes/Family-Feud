@@ -71,8 +71,8 @@
   </div>
 
   <!-- ── Create Game Modal ── -->
-  <div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
-    <div class="modal" id="modal">
+  <div class="modal-overlay" id="createModalOverlay" onclick="handleCreateOverlayClick(event)">
+    <div class="modal" id="createModal">
 
       <div class="modal-header">
         <div class="modal-title-row">
@@ -94,7 +94,6 @@
             maxlength="20"
             autocomplete="off"
           />
-          <div class="input-underline"></div>
         </div>
         <p class="input-hint">Max 20 characters</p>
       </div>
@@ -104,44 +103,116 @@
           <span class="modal-btn-icon">＋</span>
           <span>CREATE GAME</span>
         </button>
-        <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+        <button class="modal-cancel" onclick="closeCreateModal()">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Join Game Modal ── -->
+  <div class="modal-overlay" id="joinModalOverlay" onclick="handleJoinOverlayClick(event)">
+    <div class="modal" id="joinModal">
+
+      <div class="modal-header">
+        <div class="modal-title-row">
+          <span class="modal-star">★</span>
+          <h2 class="modal-title">JOIN A GAME</h2>
+          <span class="modal-star">★</span>
+        </div>
+        <p class="modal-sub">Enter your details to jump in</p>
+      </div>
+
+      <div class="modal-body">
+        <label class="input-label" for="joinPlayerName">PLAYER NAME</label>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            id="joinPlayerName"
+            class="input-field"
+            placeholder="e.g. Steve Harvey"
+            maxlength="20"
+            autocomplete="off"
+          />
+        </div>
+        <p class="input-hint">Max 20 characters</p>
+
+        <label class="input-label" for="joinRoomCode" style="margin-top: 18px;">ROOM CODE</label>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            id="joinRoomCode"
+            class="input-field input-code"
+            placeholder="e.g. ABCDEFGH"
+            maxlength="8"
+            autocomplete="off"
+          />
+        </div>
+        <p class="input-hint">8-character code from your opponent</p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="modal-btn modal-btn-gold" id="joinBtn" onclick="submitJoin()">
+          <span class="modal-btn-icon">→</span>
+          <span>JOIN GAME</span>
+        </button>
+        <button class="modal-cancel" onclick="closeJoinModal()">Cancel</button>
       </div>
 
     </div>
   </div>
 
   <script>
-    // ── Modal controls ──
+    // ── Create modal controls ──
     function handleCreate() {
-      document.getElementById('modalOverlay').classList.add('active');
+      document.getElementById('createModalOverlay').classList.add('active');
       setTimeout(() => document.getElementById('playerName').focus(), 300);
     }
 
-    function closeModal() {
-      const overlay = document.getElementById('modalOverlay');
-      overlay.classList.remove('active');
+    function closeCreateModal() {
+      document.getElementById('createModalOverlay').classList.remove('active');
       document.getElementById('playerName').value = '';
     }
 
-    function handleOverlayClick(e) {
-      if (e.target === document.getElementById('modalOverlay')) closeModal();
+    function handleCreateOverlayClick(e) {
+      if (e.target === document.getElementById('createModalOverlay')) closeCreateModal();
     }
 
+    // ── Join modal controls ──
+    function handleJoin() {
+      document.getElementById('joinModalOverlay').classList.add('active');
+      setTimeout(() => document.getElementById('joinPlayerName').focus(), 300);
+    }
+
+    function closeJoinModal() {
+      document.getElementById('joinModalOverlay').classList.remove('active');
+      document.getElementById('joinPlayerName').value = '';
+      document.getElementById('joinRoomCode').value = '';
+    }
+
+    function handleJoinOverlayClick(e) {
+      if (e.target === document.getElementById('joinModalOverlay')) closeJoinModal();
+    }
+
+    // ── Helper: shake an input on error ──
+    function shakeInput(input, originalPlaceholder, errorPlaceholder) {
+      input.classList.add('input-error');
+      if (errorPlaceholder) input.placeholder = errorPlaceholder;
+      setTimeout(() => {
+        input.classList.remove('input-error');
+        if (errorPlaceholder) input.placeholder = originalPlaceholder;
+      }, 1800);
+    }
+
+    // ── Submit create game ──
     async function submitCreate() {
       const nameInput = document.getElementById('playerName');
       const name = nameInput.value.trim();
 
       if (!name) {
-        nameInput.classList.add('input-error');
-        nameInput.placeholder = 'Please enter a name!';
-        setTimeout(() => {
-          nameInput.classList.remove('input-error');
-          nameInput.placeholder = 'e.g. Steve Harvey';
-        }, 1800);
+        shakeInput(nameInput, 'e.g. Steve Harvey', 'Please enter a name!');
         return;
       }
 
-      // Disable button while request is in flight
       const btn = document.getElementById('createBtn');
       btn.disabled = true;
       btn.innerHTML = '<span class="modal-btn-icon">⏳</span><span>CONNECTING...</span>';
@@ -156,14 +227,9 @@
         const data = await response.json();
 
         if (response.ok) {
-          // Store player info locally for use on the waiting page
           localStorage.setItem('playerName', name);
           localStorage.setItem('playerId', data.playerId);
           localStorage.setItem('roomCode', data.roomCode);
-
-          console.log(`✅ Game created! Room code: ${data.roomCode}`);
-
-          // Redirect to the waiting page
           window.location.href = `/waiting.html?code=${data.roomCode}`;
         } else {
           throw new Error(data.error || 'Something went wrong.');
@@ -173,19 +239,65 @@
         console.error('❌ Error:', err.message);
         alert(`❌ Could not connect to the server. Make sure it is running.\n\n${err.message}`);
       } finally {
-        // Re-enable button
         btn.disabled = false;
         btn.innerHTML = '<span class="modal-btn-icon">＋</span><span>CREATE GAME</span>';
       }
     }
 
-    function handleJoin() {
-      alert("Join Game — backend coming soon!");
+    // ── Submit join game ──
+    async function submitJoin() {
+      const nameInput = document.getElementById('joinPlayerName');
+      const codeInput = document.getElementById('joinRoomCode');
+      const name = nameInput.value.trim();
+      const code = codeInput.value.trim().toUpperCase();
+
+      if (!name) {
+        shakeInput(nameInput, 'e.g. Steve Harvey', 'Please enter a name!');
+        return;
+      }
+
+      if (!code || code.length !== 8) {
+        shakeInput(codeInput, 'e.g. ABCDEFGH', 'Enter a valid 8-character code!');
+        return;
+      }
+
+      const btn = document.getElementById('joinBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="modal-btn-icon">⏳</span><span>JOINING...</span>';
+
+      try {
+        const response = await fetch('http://localhost:3000/api/join-game', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ playerName: name, roomCode: code })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem('playerName', name);
+          localStorage.setItem('playerId', data.playerId);
+          localStorage.setItem('roomCode', data.roomCode);
+          window.location.href = `/waiting.html?code=${data.roomCode}`;
+        } else {
+          throw new Error(data.error || 'Something went wrong.');
+        }
+
+      } catch (err) {
+        console.error('❌ Error:', err.message);
+        alert(`❌ ${err.message}`);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="modal-btn-icon">→</span><span>JOIN GAME</span>';
+      }
     }
 
-    // Close modal on Escape key
+    // Close modals on Escape key
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModal();
+      if (e.key === 'Escape') {
+        closeCreateModal();
+        closeJoinModal();
+      }
     });
 
     // Staggered letter animation on load

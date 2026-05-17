@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Family Feud – Waiting Room</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+  <div class="scanlines"></div>
+
+  <div class="container waiting-container">
+
+    <div class="logo-wrapper logo-small">
+      <div class="logo-top">FAMILY</div>
+      <div class="logo-feud feud-small">
+        <span class="feud-letter">F</span>
+        <span class="feud-letter">E</span>
+        <span class="feud-letter">U</span>
+        <span class="feud-letter">D</span>
+      </div>
+    </div>
+
+    <div class="board-panel waiting-panel">
+
+      <div class="panel-header">
+        <div class="panel-dot"></div>
+        <span>WAITING FOR PLAYER 2</span>
+        <div class="panel-dot"></div>
+      </div>
+
+      <div class="waiting-spinner">
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring ring-2"></div>
+      </div>
+
+      <p class="waiting-msg">Share the code below with your opponent</p>
+
+      <div class="code-display">
+        <div class="code-label">ROOM CODE</div>
+        <div class="code-value" id="roomCodeDisplay">--------</div>
+        <button class="copy-btn" id="copyBtn" onclick="copyCode()">
+          <span id="copyText">COPY CODE</span>
+        </button>
+      </div>
+
+      <div class="player-info">
+        <span class="player-tag">Playing as</span>
+        <span class="player-name" id="hostName">---</span>
+      </div>
+
+      <div class="panel-footer">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+
+    </div>
+
+    <div class="ticker">
+      <div class="ticker-inner">
+        WAITING FOR OPPONENT &nbsp;★&nbsp; SHARE YOUR CODE &nbsp;★&nbsp; SURVEY SAYS &nbsp;★&nbsp; GET READY &nbsp;★&nbsp; TOP ANSWER &nbsp;★&nbsp; GOOD ANSWER &nbsp;★&nbsp; WAITING FOR OPPONENT &nbsp;★&nbsp; SHARE YOUR CODE &nbsp;★&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ── Read room code and player name from localStorage and URL ──
+    const params     = new URLSearchParams(window.location.search);
+    const roomCode   = params.get('code');
+    const playerName = localStorage.getItem('playerName');
+
+    // Redirect back to home if no room code is present
+    if (!roomCode) {
+      window.location.href = '/';
+    }
+
+    // Display room code and player name
+    document.getElementById('roomCodeDisplay').textContent = roomCode || '--------';
+    document.getElementById('hostName').textContent = playerName || 'Unknown';
+
+    // Staggered letter animation
+    document.querySelectorAll('.feud-letter').forEach((el, i) => {
+      el.style.animationDelay = `${i * 0.12}s`;
+    });
+
+    // ── Copy code to clipboard ──
+    function copyCode() {
+      navigator.clipboard.writeText(roomCode).then(() => {
+        const btn  = document.getElementById('copyBtn');
+        const text = document.getElementById('copyText');
+        text.textContent = 'COPIED!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          text.textContent = 'COPY CODE';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // ── Socket.IO will be wired up here in the next step ──
+  </script>
+
+</body>
+</html>

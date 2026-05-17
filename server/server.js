@@ -94,6 +94,57 @@ app.post('/api/create-game', async (req, res) => {
   }
 });
 
+// ── POST /api/join-game ──
+app.post('/api/join-game', async (req, res) => {
+  const { playerName, roomCode } = req.body;
+
+  if (!playerName || !playerName.trim()) {
+    return res.status(400).json({ error: 'Player name is required.' });
+  }
+
+  if (!roomCode || roomCode.trim().length !== 8) {
+    return res.status(400).json({ error: 'A valid room code is required.' });
+  }
+
+  try {
+    const game = await Game.findOne({ roomCode: roomCode.trim().toUpperCase() });
+
+    // Check 1: does the room exist?
+    if (!game) {
+      return res.status(404).json({ error: 'Room not found. Please check the code and try again.' });
+    }
+
+    // Check 2: has the game already started?
+    if (game.status === 'in-progress') {
+      return res.status(400).json({ error: 'This game has already started.' });
+    }
+
+    // Check 3: is the room full?
+    if (game.players.length >= 2) {
+      return res.status(400).json({ error: 'This room is full.' });
+    }
+
+    // All checks passed — add the joining player
+    const playerId = uuidv4();
+
+    game.players.push({
+      playerName: playerName.trim(),
+      playerId,
+      score: 0
+    });
+
+    await game.save();
+
+    console.log(`🎮 Player joined! Room: ${roomCode} | Player: ${playerName}`);
+
+    res.status(200).json({ roomCode: game.roomCode, playerId });
+
+  } catch (err) {
+    console.error('❌ Error joining game:', err.message);
+    res.status(500).json({ error: 'Failed to join game. Please try again.' });
+  }
+});
+
 // ── Start server ──
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);
