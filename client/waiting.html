@@ -6,6 +6,7 @@
   <title>Family Feud – Waiting Room</title>
   <link rel="stylesheet" href="styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet"/>
+  <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
 
@@ -102,7 +103,23 @@
       });
     }
 
-    // ── Socket.IO will be wired up here in the next step ──
+    // ── Socket.IO ──
+    const socket = io('http://localhost:3000');
+
+    socket.on('connect', () => {
+      console.log('🔌 Connected to server via Socket.IO');
+      socket.emit('join-room', roomCode);
+    });
+
+    // Listen for game-start and redirect to game page
+    socket.on('game-start', (data) => {
+      console.log('🚀 Game is starting!', data);
+      window.location.href = `/game.html?code=${roomCode}`;
+    });
+
+    socket.on('disconnect', () => {
+      console.log('🔌 Disconnected from server');
+    });
   </script>
 
 </body>

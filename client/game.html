@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Family Feud – Game</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet"/>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+  <div class="scanlines"></div>
+
+  <div class="container waiting-container">
+
+    <div class="logo-wrapper logo-small">
+      <div class="logo-top">FAMILY</div>
+      <div class="logo-feud feud-small">
+        <span class="feud-letter">F</span>
+        <span class="feud-letter">E</span>
+        <span class="feud-letter">U</span>
+        <span class="feud-letter">D</span>
+      </div>
+    </div>
+
+    <div class="board-panel waiting-panel">
+
+      <div class="panel-header">
+        <div class="panel-dot"></div>
+        <span>GAME IN PROGRESS</span>
+        <div class="panel-dot"></div>
+      </div>
+
+      <p class="waiting-msg" style="margin-bottom: 28px;">Both players are connected. Let the game begin!</p>
+
+      <div class="game-players">
+
+        <div class="game-player-card" id="player1Card">
+          <div class="game-player-label">PLAYER 1</div>
+          <div class="game-player-name" id="player1Name">---</div>
+          <div class="game-player-score">Score: <span id="player1Score">0</span></div>
+        </div>
+
+        <div class="game-vs">VS</div>
+
+        <div class="game-player-card card-gold" id="player2Card">
+          <div class="game-player-label">PLAYER 2</div>
+          <div class="game-player-name" id="player2Name">---</div>
+          <div class="game-player-score">Score: <span id="player2Score">0</span></div>
+        </div>
+
+      </div>
+
+      <div class="room-tag">
+        Room: <span id="roomCodeTag">--------</span>
+      </div>
+
+      <div class="panel-footer">
+        <span class="dot active"></span>
+        <span class="dot active"></span>
+        <span class="dot"></span>
+      </div>
+
+    </div>
+
+    <div class="ticker">
+      <div class="ticker-inner">
+        GAME ON &nbsp;★&nbsp; SURVEY SAYS &nbsp;★&nbsp; TOP ANSWER &nbsp;★&nbsp; GOOD ANSWER &nbsp;★&nbsp; STRIKE! &nbsp;★&nbsp; NUMBER ONE ANSWER &nbsp;★&nbsp; GAME ON &nbsp;★&nbsp; SURVEY SAYS &nbsp;★&nbsp; TOP ANSWER &nbsp;★&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const params   = new URLSearchParams(window.location.search);
+    const roomCode = params.get('code');
+    const playerId = localStorage.getItem('playerId');
+
+    // Redirect home if missing context
+    if (!roomCode || !playerId) {
+      window.location.href = '/';
+    }
+
+    document.getElementById('roomCodeTag').textContent = roomCode || '--------';
+
+    // Staggered letter animation
+    document.querySelectorAll('.feud-letter').forEach((el, i) => {
+      el.style.animationDelay = `${i * 0.12}s`;
+    });
+
+    // ── Fetch game data from server to populate player names ──
+    async function loadGameData() {
+      try {
+        const response = await fetch(`http://localhost:3000/api/game/${roomCode}`);
+        const data = await response.json();
+
+        if (response.ok && data.players.length === 2) {
+          document.getElementById('player1Name').textContent = data.players[0].playerName;
+          document.getElementById('player2Name').textContent = data.players[1].playerName;
+          document.getElementById('player1Score').textContent = data.players[0].score;
+          document.getElementById('player2Score').textContent = data.players[1].score;
+
+          // Highlight which card belongs to the current player
+          const myIndex = data.players.findIndex(p => p.playerId === playerId);
+          if (myIndex === 0) document.getElementById('player1Card').classList.add('card-mine');
+          if (myIndex === 1) document.getElementById('player2Card').classList.add('card-mine');
+        }
+      } catch (err) {
+        console.error('❌ Failed to load game data:', err.message);
+      }
+    }
+
+    loadGameData();
+
+    // ── Socket.IO ──
+    const socket = io('http://localhost:3000');
+
+    socket.on('connect', () => {
+      console.log('🔌 Connected to server via Socket.IO');
+      socket.emit('join-room', roomCode);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('🔌 Disconnected from server');
+    });
+  </script>
+
+</body>
+</html>

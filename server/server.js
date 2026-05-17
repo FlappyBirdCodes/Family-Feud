@@ -4,13 +4,20 @@ setServers(['1.1.1.1', '8.8.8.8']);
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
 const express          = require('express');
+const http             = require('http');
+const { Server }       = require('socket.io');
 const mongoose         = require('mongoose');
 const cors             = require('cors');
 const path             = require('path');
 const { v4: uuidv4 }  = require('uuid');
 const Game             = require('./models/Game');
 
-const app  = express();
+const app    = express();
+const server = http.createServer(app);
+const io     = new Server(server, {
+  cors: { origin: '*' }
+});
+
 const PORT = process.env.PORT || 3000;
 
 // ── Middleware ──
@@ -44,13 +51,27 @@ async function generateUniqueRoomCode() {
       characters.charAt(Math.floor(Math.random() * characters.length))
     ).join('');
 
-    // Check if this code already exists in the database
     const existingGame = await Game.findOne({ roomCode: code });
     exists = !!existingGame;
   }
 
   return code;
 }
+
+// ── Socket.IO ──
+io.on('connection', (socket) => {
+  console.log(`🔌 Socket connected: ${socket.id}`);
+
+  // Player joins a socket room using the room code
+  socket.on('join-room', (roomCode) => {
+    socket.join(roomCode);
+    console.log(`📥 Socket ${socket.id} joined room: ${roomCode}`);
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`🔌 Socket disconnected: ${socket.id}`);
+  });
+});
 
 // ── POST /api/create-game ──
 app.post('/api/create-game', async (req, res) => {
@@ -61,31 +82,20 @@ app.post('/api/create-game', async (req, res) => {
   }
 
   try {
-    // Generate a unique room code
     const roomCode = await generateUniqueRoomCode();
-
-    // Generate a unique player ID for the host
     const playerId = uuidv4();
 
-    // Create and save the game to MongoDB
     const newGame = new Game({
       roomCode,
       status: 'waiting',
-      players: [
-        {
-          playerName: playerName.trim(),
-          playerId,
-          score: 0
-        }
-      ],
+      players: [{ playerName: playerName.trim(), playerId, score: 0 }],
       currentRound: 1
     });
 
     await newGame.save();
 
-    console.log(`🎮 Game created! Room code: ${roomCode} | Host: ${playerName}`);
+    console.log(`🎮 Game created! Room: ${roomCode} | Host: ${playerName}`);
 
-    // Return the room code and playerId to the frontend
     res.status(201).json({ roomCode, playerId });
 
   } catch (err) {
@@ -127,15 +137,17 @@ app.post('/api/join-game', async (req, res) => {
     // All checks passed — add the joining player
     const playerId = uuidv4();
 
-    game.players.push({
-      playerName: playerName.trim(),
-      playerId,
-      score: 0
-    });
-
+    game.players.push({ playerName: playerName.trim(), playerId, score: 0 });
+    game.status = 'in-progress';
     await game.save();
 
     console.log(`🎮 Player joined! Room: ${roomCode} | Player: ${playerName}`);
+    console.log(`🚀 Game starting! Room: ${roomCode}`);
+
+    // Emit game-start to everyone in the socket room
+    // Pass both player names so the game page can display them
+    const players = game.players.map(p => ({ playerName: p.playerName, playerId: p.playerId }));
+    io.to(game.roomCode).emit('game-start', { players });
 
     res.status(200).json({ roomCode: game.roomCode, playerId });
 
@@ -145,7 +157,33 @@ app.post('/api/join-game', async (req, res) => {
   }
 });
 
+// ── GET /api/game/:roomCode ──
+app.get('/api/game/:roomCode', async (req, res) => {
+  try {
+    const game = await Game.findOne({ roomCode: req.params.roomCode.toUpperCase() });
+
+    if (!game) {
+      return res.status(404).json({ error: 'Game not found.' });
+    }
+
+    res.status(200).json({
+      roomCode: game.roomCode,
+      status: game.status,
+      currentRound: game.currentRound,
+      players: game.players.map(p => ({
+        playerName: p.playerName,
+        playerId: p.playerId,
+        score: p.score
+      }))
+    });
+
+  } catch (err) {
+    console.error('❌ Error fetching game:', err.message);
+    res.status(500).json({ error: 'Failed to fetch game data.' });
+  }
+});
+
 // ── Start server ──
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });

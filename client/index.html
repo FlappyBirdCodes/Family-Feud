@@ -278,7 +278,7 @@
           localStorage.setItem('playerName', name);
           localStorage.setItem('playerId', data.playerId);
           localStorage.setItem('roomCode', data.roomCode);
-          window.location.href = `/waiting.html?code=${data.roomCode}`;
+          window.location.href = `/game.html?code=${data.roomCode}`;
         } else {
           throw new Error(data.error || 'Something went wrong.');
         }
