@@ -1059,18 +1059,114 @@ body {
   transform: scale(0.97);
 }
 
+/* ── Face-off banner overlay ── */
+.faceoff-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(5, 8, 20, 0.92);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.faceoff-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.faceoff-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 40px;
+  animation: faceoffPop 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.faceoff-stars {
+  font-size: 1.2rem;
+  color: var(--gold);
+  letter-spacing: 0.5em;
+  opacity: 0.7;
+}
+
+.faceoff-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 6rem;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  line-height: 1;
+  text-shadow:
+    0 0 30px rgba(245, 197, 24, 0.6),
+    0 4px 0 var(--gold-dark);
+}
+
+.faceoff-desc {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--off-white);
+  line-height: 1.6;
+  max-width: 480px;
+  opacity: 0.85;
+}
+
+@keyframes faceoffPop {
+  from { opacity: 0; transform: scale(0.85) translateY(20px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ── Countdown overlay ── */
+.countdown-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(5, 8, 20, 0.88);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.countdown-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.countdown-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14rem;
+  line-height: 1;
+  color: var(--white);
+  text-shadow:
+    0 0 40px rgba(255,255,255,0.3),
+    0 6px 0 rgba(0,0,0,0.5);
+  transition: color 0.2s ease;
+}
+
+.countdown-number.pop {
+  animation: countPop 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes countPop {
+  0%   { transform: scale(1.4); opacity: 0; }
+  20%  { opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 /* ── Responsive ── */
 @media (max-width: 480px) {
-  .feud-letter             { font-size: 5.5rem; }
-  .logo-top                { font-size: 1.5rem; }
-  .board-panel             { padding: 24px 20px; }
-  .modal                   { padding: 28px 20px 22px; }
-  .feud-small .feud-letter { font-size: 3.5rem; }
-  .code-value              { font-size: 2.4rem; }
-  .game-players            { gap: 10px; }
-  .game-player-name        { font-size: 1.4rem; }
-  .answer-row              { grid-template-columns: 1fr; }
-  .question-text           { font-size: 1.4rem; }
-  .score-value             { font-size: 2rem; }
-  .answer-submit-btn       { padding: 14px 16px; }
+  .faceoff-title    { font-size: 4rem; }
+  .faceoff-desc     { font-size: 0.9rem; }
+  .countdown-number { font-size: 9rem; }
 }

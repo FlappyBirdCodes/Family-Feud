@@ -13,6 +13,21 @@
   <div class="bg-grid"></div>
   <div class="scanlines"></div>
 
+  <!-- ── Face-off banner overlay ── -->
+  <div class="faceoff-overlay" id="faceoffOverlay">
+    <div class="faceoff-content">
+      <div class="faceoff-stars">★ ★ ★</div>
+      <div class="faceoff-title">FACE-OFF!</div>
+      <div class="faceoff-desc">Both players race to type the highest ranked answer.<br>The fastest player with the best answer wins control of the board!</div>
+      <div class="faceoff-stars">★ ★ ★</div>
+    </div>
+  </div>
+
+  <!-- ── Countdown overlay ── -->
+  <div class="countdown-overlay" id="countdownOverlay">
+    <div class="countdown-number" id="countdownNumber">3</div>
+  </div>
+
   <!-- ── Strikes display ── -->
   <div class="strikes-bar">
     <span class="strike-label">STRIKES</span>
@@ -163,7 +178,6 @@
           document.getElementById('player2Score').textContent = data.players[1].score;
           document.getElementById('roundNumber').textContent = data.currentRound;
 
-          // Highlight the current player's card
           const myIndex = data.players.findIndex(p => p.playerId === playerId);
           if (myIndex === 0) document.getElementById('player1Card').classList.add('score-card-mine');
           if (myIndex === 1) document.getElementById('player2Card').classList.add('score-card-mine');
@@ -175,17 +189,89 @@
 
     loadGameData();
 
-    // ── Answer submission (placeholder for now) ──
+    // ── Populate the answer board with a question ──
+    function loadQuestion(questionData) {
+      document.getElementById('questionText').textContent = questionData.question;
+
+      // All tiles start locked
+      questionData.answers.forEach((_, i) => {
+        const tileNum = i + 1;
+        const tile    = document.getElementById(`tile-${tileNum}`);
+        const answer  = document.getElementById(`answer-${tileNum}`);
+        const points  = document.getElementById(`points-${tileNum}`);
+
+        tile.classList.add('locked');
+        answer.textContent = '—';
+        points.textContent = '';
+      });
+    }
+
+    // ── Phase 1: show banner then countdown ──
+    function startFaceoffSequence(questionData) {
+      const faceoffOverlay   = document.getElementById('faceoffOverlay');
+      const countdownOverlay = document.getElementById('countdownOverlay');
+      const countdownNumber  = document.getElementById('countdownNumber');
+      const answerInput      = document.getElementById('answerInput');
+      const submitBtn        = document.querySelector('.answer-submit-btn');
+
+      // Disable input during banner and countdown
+      answerInput.disabled = true;
+      submitBtn.disabled   = true;
+      answerInput.placeholder = 'Wait for the countdown...';
+
+      // Step 1: show face-off banner
+      faceoffOverlay.classList.add('active');
+
+      setTimeout(() => {
+        // Step 2: hide banner, show countdown
+        faceoffOverlay.classList.remove('active');
+        countdownOverlay.classList.add('active');
+
+        let count = 3;
+        countdownNumber.textContent = count;
+        countdownNumber.classList.add('pop');
+
+        const interval = setInterval(() => {
+          countdownNumber.classList.remove('pop');
+
+          // Force reflow so animation re-triggers each number
+          void countdownNumber.offsetWidth;
+
+          count--;
+
+          if (count > 0) {
+            countdownNumber.textContent = count;
+            countdownNumber.classList.add('pop');
+          } else if (count === 0) {
+            countdownNumber.textContent = 'GO!';
+            countdownNumber.classList.add('pop');
+            countdownNumber.style.color = 'var(--gold)';
+          } else {
+            // Step 3: hide countdown, enable input
+            clearInterval(interval);
+            countdownOverlay.classList.remove('active');
+            countdownNumber.style.color = '';
+
+            answerInput.disabled        = false;
+            submitBtn.disabled          = false;
+            answerInput.placeholder     = 'Type your answer...';
+            answerInput.focus();
+          }
+        }, 1000);
+
+      }, 4500); // banner visible for 4.5 seconds
+    }
+
+    // ── Answer submission (placeholder) ──
     function submitAnswer() {
-      const input = document.getElementById('answerInput');
+      const input  = document.getElementById('answerInput');
       const answer = input.value.trim();
       if (!answer) return;
       console.log('Answer submitted:', answer);
       input.value = '';
-      // Socket event will go here in the next step
+      // Socket event will be wired up in the next step
     }
 
-    // Allow Enter key to submit
     document.getElementById('answerInput').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') submitAnswer();
     });
@@ -196,6 +282,13 @@
     socket.on('connect', () => {
       console.log('🔌 Connected to server via Socket.IO');
       socket.emit('join-room', roomCode);
+    });
+
+    // Listen for round-start and begin Phase 1 sequence
+    socket.on('round-start', (data) => {
+      console.log('🎯 Round started!', data);
+      loadQuestion(data.question);
+      startFaceoffSequence(data.question);
     });
 
     socket.on('disconnect', () => {

@@ -58,14 +58,59 @@ async function generateUniqueRoomCode() {
   return code;
 }
 
+// ── Dummy question for Phase 1 testing ──
+const dummyQuestion = {
+  question: 'Name something you would find in a kitchen.',
+  answers: [
+    { text: 'Refrigerator', points: 42 },
+    { text: 'Stove',        points: 28 },
+    { text: 'Sink',         points: 12 },
+    { text: 'Microwave',    points: 8  },
+    { text: 'Toaster',      points: 4  },
+    { text: 'Cutting Board',points: 3  },
+    { text: 'Knife',        points: 2  },
+    { text: 'Dish Soap',    points: 1  }
+  ]
+};
+
+// ── In-memory tracker: how many sockets are in each game room ──
+const roomConnections = {};
+
+// ── In-memory store: current round state per room ──
+const roomState = {};
+
 // ── Socket.IO ──
 io.on('connection', (socket) => {
   console.log(`🔌 Socket connected: ${socket.id}`);
 
-  // Player joins a socket room using the room code
   socket.on('join-room', (roomCode) => {
     socket.join(roomCode);
     console.log(`📥 Socket ${socket.id} joined room: ${roomCode}`);
+
+    // Track connections per room
+    if (!roomConnections[roomCode]) roomConnections[roomCode] = 0;
+    roomConnections[roomCode]++;
+
+    console.log(`👥 Room ${roomCode} now has ${roomConnections[roomCode]} socket(s)`);
+
+    // If a round is already in progress, catch this socket up immediately
+    if (roomState[roomCode]) {
+      console.log(`🔄 Catching up late joiner in room ${roomCode}`);
+      socket.emit('round-start', roomState[roomCode]);
+      return;
+    }
+
+    // When both players are on game.html, kick off round 1
+    if (roomConnections[roomCode] === 2) {
+      console.log(`🎯 Both players in room ${roomCode} — emitting round-start!`);
+
+      const roundData = { round: 1, question: dummyQuestion };
+
+      // Store the round state in memory
+      roomState[roomCode] = roundData;
+
+      io.to(roomCode).emit('round-start', roundData);
+    }
   });
 
   socket.on('disconnect', () => {
