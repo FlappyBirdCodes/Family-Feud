@@ -58,20 +58,14 @@ async function generateUniqueRoomCode() {
   return code;
 }
 
-// ── Dummy question for Phase 1 testing ──
-const dummyQuestion = {
-  question: 'Name something you would find in a kitchen.',
-  answers: [
-    { text: 'Refrigerator', points: 42 },
-    { text: 'Stove',        points: 28 },
-    { text: 'Sink',         points: 12 },
-    { text: 'Microwave',    points: 8  },
-    { text: 'Toaster',      points: 4  },
-    { text: 'Cutting Board',points: 3  },
-    { text: 'Knife',        points: 2  },
-    { text: 'Dish Soap',    points: 1  }
-  ]
-};
+const questions = require('./questions.json');
+
+// ── Helper: pick a random question not already used in this game ──
+function pickQuestion(usedIds) {
+  const available = questions.filter(q => !usedIds.includes(q.id));
+  if (available.length === 0) return null;
+  return available[Math.floor(Math.random() * available.length)];
+}
 
 // ── In-memory tracker: how many sockets are in each game room ──
 const roomConnections = {};
@@ -104,10 +98,17 @@ io.on('connection', (socket) => {
     if (roomConnections[roomCode] === 2) {
       console.log(`🎯 Both players in room ${roomCode} — emitting round-start!`);
 
-      const roundData = { round: 1, question: dummyQuestion };
+      // Pick a random question not yet used in this game
+      const usedIds = [];
+      const question = pickQuestion(usedIds);
 
-      // Store the round state in memory
-      roomState[roomCode] = roundData;
+      const roundData = {
+        round: 1,
+        question
+      };
+
+      // Store round state and used question IDs in memory
+      roomState[roomCode] = { ...roundData, usedQuestionIds: [question.id] };
 
       io.to(roomCode).emit('round-start', roundData);
     }

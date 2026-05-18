@@ -1,0 +1,212 @@
+[
+  {
+    "id": 1,
+    "question": "Name something you would find in a kitchen.",
+    "answers": [
+      { "text": "Refrigerator",  "points": 42 },
+      { "text": "Stove",         "points": 28 },
+      { "text": "Sink",          "points": 12 },
+      { "text": "Microwave",     "points": 8  },
+      { "text": "Toaster",       "points": 4  },
+      { "text": "Cutting Board", "points": 3  },
+      { "text": "Knife",         "points": 2  },
+      { "text": "Dish Soap",     "points": 1  }
+    ]
+  },
+  {
+    "id": 2,
+    "question": "Name a reason someone might be late for work.",
+    "answers": [
+      { "text": "Traffic",         "points": 38 },
+      { "text": "Overslept",       "points": 30 },
+      { "text": "Car Trouble",     "points": 13 },
+      { "text": "Bad Weather",     "points": 8  },
+      { "text": "Couldn't Find Keys", "points": 5 },
+      { "text": "Sick Child",      "points": 3  },
+      { "text": "Train Delay",     "points": 2  },
+      { "text": "Wrong Outfit",    "points": 1  }
+    ]
+  },
+  {
+    "id": 3,
+    "question": "Name something people do at the beach.",
+    "answers": [
+      { "text": "Swim",           "points": 35 },
+      { "text": "Sunbathe",       "points": 27 },
+      { "text": "Build Sandcastles", "points": 15 },
+      { "text": "Play Volleyball","points": 10 },
+      { "text": "Eat Ice Cream",  "points": 6  },
+      { "text": "Collect Shells", "points": 4  },
+      { "text": "Read a Book",    "points": 2  },
+      { "text": "Surf",           "points": 1  }
+    ]
+  },
+  {
+    "id": 4,
+    "question": "Name something you always find in a hospital.",
+    "answers": [
+      { "text": "Doctors",        "points": 36 },
+      { "text": "Nurses",         "points": 25 },
+      { "text": "Beds",           "points": 16 },
+      { "text": "Waiting Room",   "points": 9  },
+      { "text": "Medicine",       "points": 6  },
+      { "text": "Wheelchairs",    "points": 4  },
+      { "text": "IV Drip",        "points": 3  },
+      { "text": "Cafeteria",      "points": 1  }
+    ]
+  },
+  {
+    "id": 5,
+    "question": "Name a popular topping for pizza.",
+    "answers": [
+      { "text": "Pepperoni",      "points": 40 },
+      { "text": "Cheese",         "points": 22 },
+      { "text": "Mushrooms",      "points": 14 },
+      { "text": "Sausage",        "points": 10 },
+      { "text": "Onions",         "points": 6  },
+      { "text": "Peppers",        "points": 4  },
+      { "text": "Olives",         "points": 3  },
+      { "text": "Pineapple",      "points": 1  }
+    ]
+  },
+  {
+    "id": 6,
+    "question": "Name something people are afraid of.",
+    "answers": [
+      { "text": "Spiders",        "points": 33 },
+      { "text": "Heights",        "points": 26 },
+      { "text": "Snakes",         "points": 17 },
+      { "text": "The Dark",       "points": 10 },
+      { "text": "Flying",         "points": 7  },
+      { "text": "Clowns",         "points": 4  },
+      { "text": "Needles",        "points": 2  },
+      { "text": "Ghosts",         "points": 1  }
+    ]
+  },
+  {
+    "id": 7,
+    "question": "Name something you do before going to bed.",
+    "answers": [
+      { "text": "Brush Teeth",    "points": 38 },
+      { "text": "Watch TV",       "points": 24 },
+      { "text": "Read",           "points": 14 },
+      { "text": "Shower",         "points": 10 },
+      { "text": "Set Alarm",      "points": 7  },
+      { "text": "Check Phone",    "points": 4  },
+      { "text": "Drink Water",    "points": 2  },
+      { "text": "Meditate",       "points": 1  }
+    ]
+  },
+  {
+    "id": 8,
+    "question": "Name a gift people commonly give on birthdays.",
+    "answers": [
+      { "text": "Gift Card",      "points": 34 },
+      { "text": "Cash",           "points": 26 },
+      { "text": "Flowers",        "points": 14 },
+      { "text": "Cake",           "points": 11 },
+      { "text": "Clothes",        "points": 7  },
+      { "text": "Perfume",        "points": 4  },
+      { "text": "Jewellery",      "points": 3  },
+      { "text": "Books",          "points": 1  }
+    ]
+  },
+  {
+    "id": 9,
+    "question": "Name something you would take on a camping trip.",
+    "answers": [
+      { "text": "Tent",           "points": 36 },
+      { "text": "Sleeping Bag",   "points": 28 },
+      { "text": "Flashlight",     "points": 15 },
+      { "text": "Food",           "points": 9  },
+      { "text": "Matches",        "points": 5  },
+      { "text": "Bug Spray",      "points": 4  },
+      { "text": "Map",            "points": 2  },
+      { "text": "First Aid Kit",  "points": 1  }
+    ]
+  },
+  {
+    "id": 10,
+    "question": "Name something people do on a Sunday morning.",
+    "answers": [
+      { "text": "Sleep In",       "points": 37 },
+      { "text": "Go to Church",   "points": 22 },
+      { "text": "Make Breakfast", "points": 18 },
+      { "text": "Read the News",  "points": 9  },
+      { "text": "Exercise",       "points": 6  },
+      { "text": "Watch TV",       "points": 4  },
+      { "text": "Go for a Walk",  "points": 3  },
+      { "text": "Do Laundry",     "points": 1  }
+    ]
+  },
+  {
+    "id": 11,
+    "question": "Name a sport people watch on TV.",
+    "answers": [
+      { "text": "Football",       "points": 38 },
+      { "text": "Basketball",     "points": 24 },
+      { "text": "Baseball",       "points": 14 },
+      { "text": "Soccer",         "points": 10 },
+      { "text": "Hockey",         "points": 7  },
+      { "text": "Tennis",         "points": 4  },
+      { "text": "Golf",           "points": 2  },
+      { "text": "Boxing",         "points": 1  }
+    ]
+  },
+  {
+    "id": 12,
+    "question": "Name something you find in a living room.",
+    "answers": [
+      { "text": "Television",     "points": 40 },
+      { "text": "Sofa",           "points": 28 },
+      { "text": "Coffee Table",   "points": 13 },
+      { "text": "Lamp",           "points": 8  },
+      { "text": "Remote Control", "points": 5  },
+      { "text": "Bookshelf",      "points": 3  },
+      { "text": "Rug",            "points": 2  },
+      { "text": "Cushions",       "points": 1  }
+    ]
+  },
+  {
+    "id": 13,
+    "question": "Name something that gets harder as you get older.",
+    "answers": [
+      { "text": "Exercise",       "points": 32 },
+      { "text": "Waking Up Early","points": 24 },
+      { "text": "Learning New Things", "points": 17 },
+      { "text": "Remembering Things",  "points": 12 },
+      { "text": "Climbing Stairs","points": 7  },
+      { "text": "Reading Small Print",  "points": 4 },
+      { "text": "Sleeping Well",  "points": 3  },
+      { "text": "Keeping Up With Technology", "points": 1 }
+    ]
+  },
+  {
+    "id": 14,
+    "question": "Name something people buy at a grocery store.",
+    "answers": [
+      { "text": "Bread",          "points": 35 },
+      { "text": "Milk",           "points": 27 },
+      { "text": "Fruits",         "points": 16 },
+      { "text": "Vegetables",     "points": 10 },
+      { "text": "Eggs",           "points": 6  },
+      { "text": "Meat",           "points": 3  },
+      { "text": "Cheese",         "points": 2  },
+      { "text": "Cereal",         "points": 1  }
+    ]
+  },
+  {
+    "id": 15,
+    "question": "Name something you would see at a wedding.",
+    "answers": [
+      { "text": "Wedding Cake",   "points": 34 },
+      { "text": "Flowers",        "points": 26 },
+      { "text": "Wedding Dress",  "points": 18 },
+      { "text": "Dancing",        "points": 10 },
+      { "text": "Bridesmaids",    "points": 6  },
+      { "text": "Photographer",   "points": 3  },
+      { "text": "Ring",           "points": 2  },
+      { "text": "Champagne",      "points": 1  }
+    ]
+  }
+]
