@@ -13,64 +13,132 @@
   <div class="bg-grid"></div>
   <div class="scanlines"></div>
 
-  <div class="container waiting-container">
-
-    <div class="logo-wrapper logo-small">
-      <div class="logo-top">FAMILY</div>
-      <div class="logo-feud feud-small">
-        <span class="feud-letter">F</span>
-        <span class="feud-letter">E</span>
-        <span class="feud-letter">U</span>
-        <span class="feud-letter">D</span>
-      </div>
+  <!-- ── Strikes display ── -->
+  <div class="strikes-bar">
+    <span class="strike-label">STRIKES</span>
+    <div class="strike-icons">
+      <span class="strike-icon" id="strike1">✕</span>
+      <span class="strike-icon" id="strike2">✕</span>
+      <span class="strike-icon" id="strike3">✕</span>
     </div>
+  </div>
 
-    <div class="board-panel waiting-panel">
+  <div class="game-page-container">
 
-      <div class="panel-header">
-        <div class="panel-dot"></div>
-        <span>GAME IN PROGRESS</span>
-        <div class="panel-dot"></div>
+    <!-- ── Scoreboard ── -->
+    <div class="scoreboard">
+      <div class="score-card" id="player1Card">
+        <div class="score-player-label">PLAYER 1</div>
+        <div class="score-player-name" id="player1Name">---</div>
+        <div class="score-value" id="player1Score">0</div>
+        <div class="score-pts">PTS</div>
       </div>
 
-      <p class="waiting-msg" style="margin-bottom: 28px;">Both players are connected. Let the game begin!</p>
-
-      <div class="game-players">
-
-        <div class="game-player-card" id="player1Card">
-          <div class="game-player-label">PLAYER 1</div>
-          <div class="game-player-name" id="player1Name">---</div>
-          <div class="game-player-score">Score: <span id="player1Score">0</span></div>
+      <div class="score-divider">
+        <div class="score-divider-logo">
+          <div class="sdl-family">FAMILY</div>
+          <div class="sdl-feud">FEUD</div>
         </div>
+        <div class="score-round">ROUND <span id="roundNumber">1</span></div>
+      </div>
 
-        <div class="game-vs">VS</div>
+      <div class="score-card score-card-right" id="player2Card">
+        <div class="score-player-label">PLAYER 2</div>
+        <div class="score-player-name" id="player2Name">---</div>
+        <div class="score-value" id="player2Score">0</div>
+        <div class="score-pts">PTS</div>
+      </div>
+    </div>
 
-        <div class="game-player-card card-gold" id="player2Card">
-          <div class="game-player-label">PLAYER 2</div>
-          <div class="game-player-name" id="player2Name">---</div>
-          <div class="game-player-score">Score: <span id="player2Score">0</span></div>
+    <!-- ── Question ── -->
+    <div class="question-panel">
+      <div class="question-label">SURVEY QUESTION</div>
+      <div class="question-text" id="questionText">
+        Name something you would find in a kitchen.
+      </div>
+    </div>
+
+    <!-- ── Answer board ── -->
+    <div class="answer-board" id="answerBoard">
+
+      <div class="answer-row">
+        <div class="answer-tile" id="tile-1">
+          <div class="tile-number">1</div>
+          <div class="tile-answer" id="answer-1">REFRIGERATOR</div>
+          <div class="tile-points" id="points-1">42</div>
         </div>
-
+        <div class="answer-tile" id="tile-2">
+          <div class="tile-number">2</div>
+          <div class="tile-answer" id="answer-2">STOVE</div>
+          <div class="tile-points" id="points-2">28</div>
+        </div>
       </div>
 
-      <div class="room-tag">
-        Room: <span id="roomCodeTag">--------</span>
+      <div class="answer-row">
+        <div class="answer-tile locked" id="tile-3">
+          <div class="tile-number">3</div>
+          <div class="tile-answer" id="answer-3">—</div>
+          <div class="tile-points" id="points-3"></div>
+        </div>
+        <div class="answer-tile locked" id="tile-4">
+          <div class="tile-number">4</div>
+          <div class="tile-answer" id="answer-4">—</div>
+          <div class="tile-points" id="points-4"></div>
+        </div>
       </div>
 
-      <div class="panel-footer">
-        <span class="dot active"></span>
-        <span class="dot active"></span>
-        <span class="dot"></span>
+      <div class="answer-row">
+        <div class="answer-tile locked" id="tile-5">
+          <div class="tile-number">5</div>
+          <div class="tile-answer" id="answer-5">—</div>
+          <div class="tile-points" id="points-5"></div>
+        </div>
+        <div class="answer-tile locked" id="tile-6">
+          <div class="tile-number">6</div>
+          <div class="tile-answer" id="answer-6">—</div>
+          <div class="tile-points" id="points-6"></div>
+        </div>
+      </div>
+
+      <div class="answer-row">
+        <div class="answer-tile locked" id="tile-7">
+          <div class="tile-number">7</div>
+          <div class="tile-answer" id="answer-7">—</div>
+          <div class="tile-points" id="points-7"></div>
+        </div>
+        <div class="answer-tile locked" id="tile-8">
+          <div class="tile-number">8</div>
+          <div class="tile-answer" id="answer-8">—</div>
+          <div class="tile-points" id="points-8"></div>
+        </div>
       </div>
 
     </div>
 
-    <div class="ticker">
-      <div class="ticker-inner">
-        GAME ON &nbsp;★&nbsp; SURVEY SAYS &nbsp;★&nbsp; TOP ANSWER &nbsp;★&nbsp; GOOD ANSWER &nbsp;★&nbsp; STRIKE! &nbsp;★&nbsp; NUMBER ONE ANSWER &nbsp;★&nbsp; GAME ON &nbsp;★&nbsp; SURVEY SAYS &nbsp;★&nbsp; TOP ANSWER &nbsp;★&nbsp;
+    <!-- ── Answer input ── -->
+    <div class="answer-input-area">
+      <div class="input-wrapper answer-input-wrapper">
+        <input
+          type="text"
+          id="answerInput"
+          class="input-field answer-input-field"
+          placeholder="Type your answer..."
+          maxlength="40"
+          autocomplete="off"
+        />
       </div>
+      <button class="answer-submit-btn" onclick="submitAnswer()">
+        SUBMIT
+      </button>
     </div>
 
+  </div>
+
+  <!-- ── Bottom ticker ── -->
+  <div class="ticker">
+    <div class="ticker-inner">
+      GAME ON &nbsp;★&nbsp; SURVEY SAYS &nbsp;★&nbsp; TOP ANSWER &nbsp;★&nbsp; GOOD ANSWER &nbsp;★&nbsp; STRIKE! &nbsp;★&nbsp; NUMBER ONE ANSWER &nbsp;★&nbsp; GAME ON &nbsp;★&nbsp; SURVEY SAYS &nbsp;★&nbsp;
+    </div>
   </div>
 
   <script>
@@ -78,19 +146,11 @@
     const roomCode = params.get('code');
     const playerId = localStorage.getItem('playerId');
 
-    // Redirect home if missing context
     if (!roomCode || !playerId) {
       window.location.href = '/';
     }
 
-    document.getElementById('roomCodeTag').textContent = roomCode || '--------';
-
-    // Staggered letter animation
-    document.querySelectorAll('.feud-letter').forEach((el, i) => {
-      el.style.animationDelay = `${i * 0.12}s`;
-    });
-
-    // ── Fetch game data from server to populate player names ──
+    // ── Fetch game data ──
     async function loadGameData() {
       try {
         const response = await fetch(`http://localhost:3000/api/game/${roomCode}`);
@@ -101,11 +161,12 @@
           document.getElementById('player2Name').textContent = data.players[1].playerName;
           document.getElementById('player1Score').textContent = data.players[0].score;
           document.getElementById('player2Score').textContent = data.players[1].score;
+          document.getElementById('roundNumber').textContent = data.currentRound;
 
-          // Highlight which card belongs to the current player
+          // Highlight the current player's card
           const myIndex = data.players.findIndex(p => p.playerId === playerId);
-          if (myIndex === 0) document.getElementById('player1Card').classList.add('card-mine');
-          if (myIndex === 1) document.getElementById('player2Card').classList.add('card-mine');
+          if (myIndex === 0) document.getElementById('player1Card').classList.add('score-card-mine');
+          if (myIndex === 1) document.getElementById('player2Card').classList.add('score-card-mine');
         }
       } catch (err) {
         console.error('❌ Failed to load game data:', err.message);
@@ -113,6 +174,21 @@
     }
 
     loadGameData();
+
+    // ── Answer submission (placeholder for now) ──
+    function submitAnswer() {
+      const input = document.getElementById('answerInput');
+      const answer = input.value.trim();
+      if (!answer) return;
+      console.log('Answer submitted:', answer);
+      input.value = '';
+      // Socket event will go here in the next step
+    }
+
+    // Allow Enter key to submit
+    document.getElementById('answerInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitAnswer();
+    });
 
     // ── Socket.IO ──
     const socket = io('http://localhost:3000');

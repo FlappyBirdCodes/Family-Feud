@@ -712,87 +712,351 @@ body {
   letter-spacing: 0.05em;
 }
 
-/* ── Game page ── */
-.game-players {
+/* ─────────────────────────────────────────
+   GAME PAGE
+───────────────────────────────────────── */
+
+/* ── Strikes bar ── */
+.strikes-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
+  gap: 14px;
+  padding: 10px 20px;
+  background: rgba(10, 14, 42, 0.95);
+  border-bottom: 1px solid rgba(224, 48, 48, 0.2);
+  backdrop-filter: blur(8px);
 }
 
-.game-player-card {
-  flex: 1;
-  min-width: 130px;
-  background: rgba(30, 109, 255, 0.08);
-  border: 1px solid rgba(30, 109, 255, 0.3);
-  border-radius: 6px;
-  padding: 20px 16px;
-  text-align: center;
-  transition: box-shadow 0.2s ease;
-}
-
-.card-gold {
-  background: rgba(245, 197, 24, 0.08);
-  border-color: rgba(245, 197, 24, 0.3);
-}
-
-.card-mine {
-  box-shadow: 0 0 0 2px var(--gold), 0 0 20px rgba(245, 197, 24, 0.2);
-}
-
-.game-player-label {
+.strike-label {
   font-family: 'Oswald', sans-serif;
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.3em;
-  color: rgba(232, 236, 255, 0.35);
-  margin-bottom: 8px;
+  color: rgba(232, 236, 255, 0.3);
 }
 
-.game-player-name {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.8rem;
-  letter-spacing: 0.05em;
-  color: var(--white);
+.strike-icons {
+  display: flex;
+  gap: 8px;
+}
+
+.strike-icon {
+  font-size: 1.4rem;
+  color: rgba(224, 48, 48, 0.15);
+  transition: color 0.3s ease, text-shadow 0.3s ease;
   line-height: 1;
-  margin-bottom: 8px;
-  text-shadow: 0 0 12px rgba(255,255,255,0.15);
 }
 
-.game-player-score {
-  font-family: 'Roboto', sans-serif;
-  font-size: 0.8rem;
-  font-weight: 300;
-  color: rgba(232, 236, 255, 0.4);
-  letter-spacing: 0.05em;
+.strike-icon.active {
+  color: var(--red);
+  text-shadow: 0 0 12px rgba(224, 48, 48, 0.7);
+  animation: strikeFlash 0.4s ease;
 }
 
-.game-vs {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.8rem;
-  color: var(--gold);
-  letter-spacing: 0.1em;
-  opacity: 0.6;
-  flex-shrink: 0;
+@keyframes strikeFlash {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.4); }
+  100% { transform: scale(1); }
 }
 
-.room-tag {
-  font-family: 'Roboto', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 300;
-  color: rgba(232, 236, 255, 0.25);
-  letter-spacing: 0.1em;
+/* ── Game page container ── */
+.game-page-container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 70px 16px 80px;
+}
+
+/* ── Scoreboard ── */
+.scoreboard {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  background: var(--navy-mid);
+  border: 2px solid rgba(245, 197, 24, 0.2);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(30, 109, 255, 0.1), 0 8px 32px rgba(0,0,0,0.4);
+  position: relative;
+}
+
+.scoreboard::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.score-card {
+  flex: 1;
+  padding: 18px 20px;
   text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.05);
+  transition: background 0.3s ease;
+}
+
+.score-card-right {
+  border-right: none;
+  border-left: 1px solid rgba(255,255,255,0.05);
+}
+
+.score-card-mine {
+  background: rgba(245, 197, 24, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(245, 197, 24, 0.2);
+}
+
+.score-player-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  color: rgba(232, 236, 255, 0.3);
   margin-bottom: 4px;
 }
 
-.room-tag span {
+.score-player-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.05em;
+  color: var(--white);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.score-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.8rem;
+  line-height: 1;
+  color: var(--gold);
+  text-shadow: 0 0 20px rgba(245, 197, 24, 0.4);
+  transition: transform 0.2s ease;
+}
+
+.score-pts {
   font-family: 'Oswald', sans-serif;
-  font-weight: 600;
-  color: rgba(232, 236, 255, 0.4);
+  font-size: 0.6rem;
   letter-spacing: 0.2em;
+  color: rgba(232, 236, 255, 0.25);
+}
+
+.score-divider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.sdl-family {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: rgba(232, 236, 255, 0.3);
+  line-height: 1;
+}
+
+.sdl-feud {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  line-height: 1;
+  text-shadow: 0 0 12px rgba(245, 197, 24, 0.4);
+}
+
+.score-round {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--blue-light);
+  white-space: nowrap;
+}
+
+/* ── Question panel ── */
+.question-panel {
+  width: 100%;
+  background: var(--navy-mid);
+  border: 2px solid rgba(30, 109, 255, 0.3);
+  border-radius: 6px;
+  padding: 20px 28px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(30, 109, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.question-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--blue-light), transparent);
+}
+
+.question-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  color: rgba(232, 236, 255, 0.3);
+  margin-bottom: 10px;
+}
+
+.question-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.9rem;
+  letter-spacing: 0.05em;
+  color: var(--white);
+  line-height: 1.2;
+  text-shadow: 0 0 20px rgba(255,255,255,0.1);
+}
+
+/* ── Answer board ── */
+.answer-board {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.answer-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* ── Answer tile ── */
+.answer-tile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--navy-light);
+  border: 1px solid rgba(245, 197, 24, 0.35);
+  border-radius: 4px;
+  box-shadow: 0 0 20px rgba(245, 197, 24, 0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+  animation: tileReveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  position: relative;
+  overflow: hidden;
+}
+
+.answer-tile::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(245,197,24,0.05) 0%, transparent 60%);
+}
+
+.answer-tile.locked {
+  background: rgba(10, 14, 42, 0.6);
+  border-color: rgba(255,255,255,0.06);
+  box-shadow: none;
+}
+
+.answer-tile.locked::before {
+  display: none;
+}
+
+.tile-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  color: var(--gold);
+  opacity: 0.7;
+  min-width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.answer-tile.locked .tile-number {
+  color: rgba(232, 236, 255, 0.2);
+  opacity: 1;
+}
+
+.tile-answer {
+  flex: 1;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.25rem;
+  letter-spacing: 0.05em;
+  color: var(--white);
+  text-shadow: 0 0 8px rgba(255,255,255,0.1);
+}
+
+.answer-tile.locked .tile-answer {
+  color: rgba(232, 236, 255, 0.15);
+  font-size: 1.5rem;
+  letter-spacing: 0.2em;
+}
+
+.tile-points {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  color: var(--gold);
+  text-shadow: 0 0 10px rgba(245, 197, 24, 0.5);
+  flex-shrink: 0;
+  min-width: 30px;
+  text-align: right;
+}
+
+@keyframes tileReveal {
+  from { opacity: 0; transform: rotateX(-90deg) scaleY(0.5); }
+  to   { opacity: 1; transform: rotateX(0deg) scaleY(1); }
+}
+
+/* ── Answer input area ── */
+.answer-input-area {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.answer-input-wrapper {
+  flex: 1;
+}
+
+.answer-input-field {
+  font-size: 1rem !important;
+  letter-spacing: 0.05em !important;
+}
+
+.answer-submit-btn {
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #1a4fd6 0%, #1e6dff 60%, #3a82ff 100%);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: 0.12em;
+  color: var(--white);
+  box-shadow: 0 4px 20px rgba(30, 109, 255, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.answer-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(30, 109, 255, 0.6);
+}
+
+.answer-submit-btn:active {
+  transform: scale(0.97);
 }
 
 /* ── Responsive ── */
@@ -805,4 +1069,8 @@ body {
   .code-value              { font-size: 2.4rem; }
   .game-players            { gap: 10px; }
   .game-player-name        { font-size: 1.4rem; }
+  .answer-row              { grid-template-columns: 1fr; }
+  .question-text           { font-size: 1.4rem; }
+  .score-value             { font-size: 2rem; }
+  .answer-submit-btn       { padding: 14px 16px; }
 }
